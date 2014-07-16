@@ -88,6 +88,7 @@ public class RtspSession {
     	RtspRequest rtspRequest = null;
     	try {
 			rtspRequest = RtspRequest.parseRequest(input);
+			Log.d("RTSP Request : " + rtspRequest.headers.toString());
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,7 +100,7 @@ public class RtspSession {
 			e.printStackTrace();
 		}
     	
-    	RtspResponse response = new RtspResponse(rtspRequest);
+    	//RtspResponse response = new RtspResponse(rtspRequest);
     	if(rtspRequest == null) {
     		rtspCmdType = RTSP_CMD_TYPES.RTSP_UNKNOWN;
     		return rtspCmdType;
@@ -113,13 +114,13 @@ public class RtspSession {
 		}
     	
     	if (rtspRequest.method.toUpperCase().equals("DESCRIBE")) {
-    		Log.d(TAG, "DESCRIBE");
+    		Log.d("DESCRIBE");
     		rtspCmdType = RTSP_CMD_TYPES.RTSP_DESCRIBE;
     		
     		streamID = 1;
     		
     		String sdpbuf = "v=0\r\n"
-    		        + "o=- 1 1 IN IP4 10.10.3.43\r\n"           
+    		        + "o=- 1 1 rtsp://127.0.0.1:8554/mjpeg/1\r\n"           
     		        + "s=SDP Seminar\r\n"
     		        + "t=0 0\r\n"                                            // start / stop - 0 -> unbounded and permanent session
     		        + "m=video 0 RTP/AVP 26\r\n"                             // currently we just handle UDP sessions
@@ -133,14 +134,14 @@ public class RtspSession {
 					+ sdpbuf;
 
 		}else if (rtspRequest.method.toUpperCase().equals("OPTIONS")) {
-			Log.d(TAG, "OPTIONS");
+			Log.d("OPTIONS");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_OPTIONS;
 			
 			conntent = "RTSP/1.0 200 OK\r\n"
 					+ (seqid >= 0 ? ("Cseq: " + seqid + "\r\n") : "")
 					+ "Public: DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE\r\n\r\n";
 		}else if (rtspRequest.method.toUpperCase().equals("SETUP")) {
-			Log.d(TAG, "SETUP");
+			Log.d("SETUP");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_SETUP;
 			
 			if ( tcpTransport ) {
@@ -163,7 +164,7 @@ public class RtspSession {
 			}
 			
 		}else if (rtspRequest.method.toUpperCase().equals("PLAY")) {
-			Log.d(TAG, "PLAY");
+			Log.d("PLAY");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_PLAY;
 			
 			conntent = "RTSP/1.0 200 OK\r\n"
@@ -173,13 +174,13 @@ public class RtspSession {
 					+ "RTP-Info: url=rtsp://127.0.0.1:8554/mjpeg/1/track1\r\n\r\n";
 			
 		}else if (rtspRequest.method.toUpperCase().equals("PAUSE")) {
-			Log.d(TAG, "PAUSE");
+			Log.d("PAUSE");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_PAUSE;
 		}else if (rtspRequest.method.toUpperCase().equals("TEARDOWN")) {
-			Log.d(TAG, "TEARDOWN");
+			Log.d("TEARDOWN");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_TEARDOWN;
 		}else {
-			Log.d(TAG, "RTSP_UNKNOWN");
+			Log.d("RTSP_UNKNOWN");
 			rtspCmdType = RTSP_CMD_TYPES.RTSP_UNKNOWN;
 		}
     	

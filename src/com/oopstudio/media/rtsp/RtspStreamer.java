@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import com.oopstudio.utils.Log;
+
 
 public class RtspStreamer {
 	
@@ -59,18 +61,16 @@ public class RtspStreamer {
 				
 				try {
 					
-					byte [] inMsg = new byte[65535];
-					byte [] outMsg;
-					DatagramPacket inPacket;
-					
 					rtpSocket = new DatagramSocket( p );
 					rtcpSocket = new DatagramSocket( p + 1 );
 					
 					if ( rtpSocket != null && rtcpSocket != null) {
-						
 						rtpServerPort = p;
 						rtcpServerPort = p + 1;
 						break;
+					}else {
+						rtpSocket.close();
+						rtcpSocket.close();
 					}
 					
 				}catch ( SocketException e ) {
@@ -164,7 +164,7 @@ public class RtspStreamer {
 	    if (tcpTransport) // RTP over RTSP - we send the buffer + 4 byte additional header
 	    {
 	    	try {
-				client.getOutputStream().write(RtpBuf);
+				client.getOutputStream().write(RtpBuf, 0, RtpBuf.length + 4);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -172,8 +172,9 @@ public class RtspStreamer {
 	    }
 	    else                // UDP - we send just the buffer by skipping the 4 byte RTP over RTSP header
 	    {
-//	        sendto(rtpSocket,&RtpBuf[4],RtpPacketSize,0,(SOCKADDR *) & RecvAddr,sizeof(RecvAddr));
-	    	DatagramPacket dp = new DatagramPacket(RtpBuf, RtpBuf.length, client.getInetAddress(), rtpClientPort);
+	    	byte [] temp = new byte [RtpBuf.length-4];
+	    	System.arraycopy(RtpBuf, 4, temp, 0, temp.length);
+	    	DatagramPacket dp = new DatagramPacket(temp, temp.length, client.getInetAddress(), rtpClientPort);
 	    	try {
 				rtpSocket.send(dp);
 			} catch (IOException e) {

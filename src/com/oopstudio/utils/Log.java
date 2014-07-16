@@ -19,8 +19,8 @@ public class Log {
 		log.append(msg);
 
 		System.out.println(log.toString());
-		FileLog.writeLog(TAG, log.toString());
-		FileLog.writeLog(null, log.toString());
+		if ( TAG != null ) FileLog.writeLog(TAG, log.toString());
+		else FileLog.writeLog(null, log.toString());
 	}
 	
 	public static void d(String msg) {

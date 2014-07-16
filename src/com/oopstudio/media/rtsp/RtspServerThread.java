@@ -60,7 +60,7 @@ public class RtspServerThread extends Thread {
 	public void timerWork() {
 		
 		if ( isStreamingStart ) {
-			Log.d("Start stream images ...");
+//			Log.d("Start stream images ...");
 			streamer.streamImage(rtspSession.getStreamID());
 		}
 		
