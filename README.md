@@ -3,8 +3,12 @@ media-solution
 
 Media solution written by java
 
-OpenSaturday에서 야심차게 진행했던 RTSP + MJPEG 프로젝트 소스 입니다.
-TCP 부분은 정상 동작을 확인 했으며 UDP 쪽은 작업 진행 중입니다.
+## [OOPS] RTSP + MJPEG Project
 
-작업이 완료되는 시점에서 버전을 생성하도록 하겠습니다.
-고맙습니다. 
+모임 열린 토요일(OpenSaturday)의 공식적인 첫 프로젝트입니다.
+
+RTSP 서버에 연속된 사진(JPEG) 파일을 스트림하는 프로그램입니다.
+C++로 이뤄진 소스를 포팅 했으며 TCP/UDP로 동작함을 확인했습니다.
+다만 동작 확인을 위해 하드 코딩을 진행한 상황이므로 지속적으로 개선될 예정입니다.
+
+고맙습니다.
